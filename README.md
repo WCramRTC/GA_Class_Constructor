@@ -77,13 +77,19 @@ We'll focus on adding a new class with various constructors.
 ---
 
 ## Create a new Book class file
+We're starting off by creating a new class to represent a Book object. IRL this could be the representation of a digital book like an EBook on Kindle. This could be used in a Library app when representing their Inventory. This could even be a "Book" object in a video game.
 
 - Add a new class file to your project named `Book.cs`.
+- Add 3 fields
+    - private string title;
+    - private string author;
 
 ```csharp
 public class Book
 {
     // Fields and constructors will go here
+    private string title;
+    private string author;
 }
 ```
 
@@ -91,16 +97,37 @@ public class Book
 
 ### **Step 1: Understanding Constructors**
 
-**Constructors** are special methods used to initialize objects.
+The Constructor has 2 purposes.
+    - 1. When a constructor is called, `new ClassName();` it create a place in memory that holds all the information related to that instance.
+    - 2. Enforce information required to create a new instance of the object.
 
-- Add a comment in the `Book` class explaining the role of constructors.
+The format of a constructor is
+- Access Modifer ( usually public )
+- Same Class Name ( For our book class it'll be Book )
+- Any parameters you want to pass in ( No parameters will make it a default constructor )
 
 ```csharp
-class Book
-{
-    // Constructors initialize objects and set initial values for fields
+    public ClassName(parameters) 
+    { 
+        Additional Code
+    }
+```
+
+Go back to `Program.cs` and in `Main` lets create a new instance of Book.
+
+```csharp
+
+public class Program {
+    
+    public static void Main(string[] args) {
+    
+    // Write this code
+    Book newBook = new Book(); // <---- This is calling a constructor
+    }
 }
 ```
+
+When you use `new ClassName()`, that is calling the constructor. It's like calling a method. 
 
 ---
 
@@ -108,22 +135,51 @@ class Book
 
 A **default constructor** is provided by C# if no constructors are explicitly defined. It initializes the object without setting any fields.
 
-- Demonstrate this with a comment in the `Book` class.
+```csharp
+    Book newBook = new Book(); // This is calling the default constructor
+```
+
+This will create that new Book object in "heap" memory, that's longer term memory. And then assign the address to the name `newBook` which is store in the stack, or shorter and faster memory. 
+
+If you don't add a constructor to your class, it automatically has a default constructor.
 
 ```csharp
 class Book
 {
+    private string title;
+    private string author;
+
     // Default constructor is implicitly created if no constructors are defined
 }
 ```
+
+This will allow you to create a new `instance` of a book object, but if you tried to access any data assoicated with it, the fields will be empty. Depending on how you build your class this could cause it to break if there is data required for it to work.
+
+For that we create our own `constructors`.
 
 ---
 
 ### **Step 3: Custom Constructors**
 
-Custom constructors allow for more controlled object initialization.
+By creating our own constructor we do 2 things.
+    1. We remove the default constructor.
+        If you create your own constructor, there is no longer a default constructor that takes no arguments.
+    2. We ensure that specific data HAS to be passed in to make an instance of this class.
 
-- Add a custom constructor in the `Book` class to initialize fields like `title` and `author`.
+> Example:
+```csharp
+    public Book(string author) {
+        this.author = author;
+    }
+```
+
+Adding this means we HAVE to pass a string as an agrument. And make sure that the author class has information in it.
+``` csharp
+    Book newBook = new Book("Terry Pratchett"); // This works
+    Book brokenBook = new Book(); // No longer works
+```
+
+- **Add a custom constructor in the `Book` class to initialize fields like `title` and `author`.**
 
 ```csharp
 class Book
@@ -143,8 +199,8 @@ class Book
 ---
 
 ### **Step 4: Overloading Constructors**
+But what if we want to have more than just one option for our constructors? Then we can do what's known as "overloading our constructor". That means we create multiple constructors, but pass in different parameters. Depending on the arguments passed in, such as Book(string, string, int) or Book(string, int) or Book(string, string), the compiler will know which constructor to call.
 
-**Constructor overloading** means having multiple constructors with different parameters.
 
 - Add another constructor to `Book` for different initialization scenarios.
 
@@ -152,6 +208,13 @@ class Book
 class Book
 {
     ...
+
+    // Custom constructor
+    public Book(string title, string author)
+    {
+        this.title = title;
+        this.author = author;
+    }
 
     // Overloaded constructor
     public Book(string title)
@@ -161,21 +224,49 @@ class Book
 }
 ```
 
+Now you can create a new Book instance in 2 different ways.
+
+***In Your code, create new instances of Book using both of your constructors***
+```csharp
+    Book bookAuthorAndName = new Book("Night Watch", "Terry Pratchett");
+    Book bookNameOnly = new Book("Wyrd Sisters");
+```
+
+
+Note: That you have to have different arrangments of `Parameters`. You can't have one that does (string author, string title) and then another with (string title, and string author). The computer just sees (string, string) and wouldn't know which one to call.
+
+
+
 ---
 
 ### **Step 5: Field Initialization in Constructors**
+You can also use a constructor to initialize a field with some default information.
 
 Initializing fields in constructors is a way to ensure that objects start with valid states.
 
 - Explain this concept in a comment in the `Book` class.
 
+Lets go back to our constructor that just took a title. And give our author a default value.
 ```csharp
 class Book
 {
     ...
 
     // Field initialization in constructors ensures objects have valid states
+    public Book(string title)
+    {
+        this.title = title;
+        this.author = "No Author Given"; // Default value
+    }
 }
+```
+
+This way even if an author isn't given, a default value will be provided.
+
+```csharp
+    
+    Console.WriteLine(bookNameOnly.Author);
+    // Prints No Author Given
 ```
 
 ---
@@ -198,6 +289,10 @@ static void Main(string[] args)
 ---
 
 ### **Step 7: Testing Constructors**
+
+Create 5 different Book instances using different constructors and print out their information ( make sure to properly setup your fields and properties )
+
+Create a NEW class of your own, and add two constructors.
 
 - Test the behavior of different constructors and output their results.
 
